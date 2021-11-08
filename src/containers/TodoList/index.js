@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from "react";
-import Todo from "../../components/Todo";
-import NewTodoForm from "../../components/TodoForm";
-import {fechTasks, completeTask} from "../../services/tasks";
-import "./style.css";
+import React, { useState, useEffect } from 'react';
+import Todo from '../../components/Todo';
+import NewTodoForm from '../../components/TodoForm';
+import {
+  fechTasks,
+  completeTask,
+  deleteTask,
+  putTask,
+  postTask,
+} from '../../services/tasks';
+import './style.css';
 
 function TodoList() {
-
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    
-    async function getTasks(){
+    async function getTasks() {
       const tasks = await fechTasks();
       setTodos(tasks);
     }
@@ -18,16 +22,19 @@ function TodoList() {
     getTasks();
   }, []);
 
-  const create = newTodo => {
+  const create = async (newTodo) => {
+    await postTask(newTodo);
     setTodos([...todos, newTodo]); //Se está agregando la tarea en el estado
   };
 
-  const remove = id => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const remove = (id) => {
+    const deleted = deleteTask(id);
+    setTodos([todos.filter((task) => task.id !== id)]);
   };
 
   const update = (id, updtedTask) => {
-    const updatedTodos = todos.map(todo => {
+    putTask(updtedTask);
+    const updatedTodos = todos?.map((todo) => {
       if (todo.id === id) {
         return { ...todo, ...updtedTask };
       }
@@ -36,8 +43,8 @@ function TodoList() {
     setTodos(updatedTodos);
   };
 
-  const toggleComplete = id => {
-    const updatedTodos = todos.map(async todo => {
+  const toggleComplete = (id) => {
+    const updatedTodos = todos?.map(async (todo) => {
       if (todo.id === id) {
         await completeTask(id, todo); //Para completar (marcar) la tarea en el back
         return { ...todo, completed: !todo.completed };
@@ -47,7 +54,7 @@ function TodoList() {
     setTodos(updatedTodos);
   };
 
-  const todosList = todos.map(todo => (
+  const todosList = todos?.map((todo) => (
     <Todo
       toggleComplete={toggleComplete}
       update={update}
@@ -58,7 +65,7 @@ function TodoList() {
   ));
 
   return (
-    <div className="TodoList">
+    <div className='TodoList'>
       <h1>
         Taskit <span>Lista de tareas</span>
       </h1>

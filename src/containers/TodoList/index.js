@@ -28,7 +28,7 @@ function TodoList() {
   };
 
   const remove = (id) => {
-    const deleted = deleteTask(id);
+    deleteTask(id);
     setTodos([todos.filter((task) => task.id !== id)]);
   };
 

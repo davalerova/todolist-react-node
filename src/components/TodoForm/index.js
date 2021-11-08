@@ -1,5 +1,5 @@
-import React, { useState, useReducer } from 'react';
-import { postTask } from '../../services/tasks';
+import React, { useReducer } from 'react';
+//import { postTask } from '../../services/tasks';
 import './style.css';
 
 function NewTodoForm({ task, createTodo }) {
